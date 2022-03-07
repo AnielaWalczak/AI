@@ -15,10 +15,13 @@ TRAKTOR_IKONA = pygame.transform.scale(pygame.image.load(os.path.join('Ikony', '
 
 
 def wyswietl_okno():
-    OKNO.fill(BIALY)
+    OKNO.fill((150, 200, 150))
     OKNO.blit(TEST1_IKONA,
               (SZEROKOSC_OKNA / 2 - TEST1_IKONA.get_width() / 2, WYSOKOSC_OKNA / 2 - TEST1_IKONA.get_height() / 2))
     OKNO.blit(TRAKTOR_IKONA, (0, 0))
+    OKNO.blit(TRAKTOR_IKONA, (SZEROKOSC_OKNA - TRAKTOR_IKONA.get_width(), 0))
+    OKNO.blit(TRAKTOR_IKONA, (SZEROKOSC_OKNA - TRAKTOR_IKONA.get_width(), WYSOKOSC_OKNA - TRAKTOR_IKONA.get_height()))
+    OKNO.blit(TRAKTOR_IKONA, (0, WYSOKOSC_OKNA - TRAKTOR_IKONA.get_height()))
     pygame.display.update()
 
 
