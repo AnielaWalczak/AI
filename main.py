@@ -36,12 +36,10 @@ def wyswietl_okno():
         if znak == 1:
             odleglosc = 0 - odleglosc
         if os == 0:
-            if lista_hitboxow_agentow[a].x + odleglosc < SZEROKOSC_OKNA - lista_hitboxow_agentow[a].width and \
-                    lista_hitboxow_agentow[a].x + odleglosc > 0:
+            if SZEROKOSC_OKNA - lista_hitboxow_agentow[a].width > lista_hitboxow_agentow[a].x + odleglosc > 0:
                 lista_hitboxow_agentow[a].x += odleglosc
         else:
-            if lista_hitboxow_agentow[a].y + odleglosc < WYSOKOSC_OKNA - lista_hitboxow_agentow[a].height and \
-                    lista_hitboxow_agentow[a].y + odleglosc > 0:
+            if WYSOKOSC_OKNA - lista_hitboxow_agentow[a].height > lista_hitboxow_agentow[a].y + odleglosc > 0:
                 lista_hitboxow_agentow[a].y += odleglosc
     pygame.display.update()
 
@@ -63,7 +61,7 @@ def main():
         print(agent1_hitbox.x, agent1_hitbox.y)
         # wyswietl_agenta1(agent1_hitbox)
         los = random.randint(1, 30)
-        if len(lista_agentow) < 20:
+        if len(lista_agentow) < 30:
             pom = None
             if los == 1:
                 pom = 'wozek_ze_skrzynka.png'
