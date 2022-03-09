@@ -1,11 +1,17 @@
+from enum import Enum
+
 FPS = 120
 KROK_AGENTA1 = 2
-
 SZEROKOSC_OKNA = 1280
 WYSOKOSC_OKNA = 960
-
 BOK_AGENTA1 = 100
-
 BIALY = (255, 255, 255)
 JASNOSZARY1 = (200, 200, 200)
 ZIELONY1 = (26, 122, 26)
+
+
+class KIERUNEK(Enum):
+    GORA = 0
+    DOL = 1
+    LEWO = 2
+    PRAWO = 3
