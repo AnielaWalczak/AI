@@ -1,11 +1,17 @@
 import random
 
+import pygame
+
 from stale import *
 
 
 class Agent1:
-    def __init__(self, hitbox, tekstura, kierunek, droga):
-        self.hitbox = hitbox
+    bok = BOK_AGENTA1
+    bok_w_polach = BOK_AGENTA1_W_POLACH
+
+    def __init__(self, pole_lewe_gorne, tekstura, kierunek, droga):
+        self.pole_lewe_gorne = pole_lewe_gorne
+        self.hitbox = pygame.Rect(self.pole_lewe_gorne.x_lewego_boku, self.pole_lewe_gorne.y_gory, self.bok, self.bok)
         self.tekstura = tekstura
         self.kierunek = kierunek
         self.droga = droga
@@ -93,3 +99,8 @@ class Agent1:
             self.kierunek = KIERUNEK.PRAWO
         elif self.kierunek == KIERUNEK.PRAWO:
             self.kierunek = KIERUNEK.LEWO
+
+    def zaznacz_zajmowane_pola_na_kracie(self, Krata):
+        for wiersz in range(self.pole_lewe_gorne.wiersz, self.pole_lewe_gorne.wiersz + self.bok_w_polach):
+            for kolumna in range(self.pole_lewe_gorne.kolumna, self.pole_lewe_gorne.kolumna + self.bok_w_polach):
+                Krata[wiersz][kolumna] = POLE.AGENT
