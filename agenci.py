@@ -1,109 +1,98 @@
 import random
 
-import pygame
-from enumy import *
-
-from stale import *
+from klasy import *
 
 
-class Agent1:
+# poleKoncoweDolne -> wiersz+bokWPolach-1  kolumna+bokWPolach-1
+class Agent:
     bok = BOK_AGENTA1
-    bok_w_polach = BOK_AGENTA1_W_POLACH
-    Agenci = []
+    bokWPolach = BOK_AGENTA1_W_POLACH
 
-    def __init__(self, pole_lewe_gorne, tekstura, kierunek, droga):
-        self.pole_lewe_gorne = pole_lewe_gorne
-        self.hitbox = pygame.Rect(self.pole_lewe_gorne.x_lewego_boku, self.pole_lewe_gorne.y_gory, self.bok, self.bok)
+    def __init__(self, Krata, poleStartoweGorne, tekstura, kierunek, droga):
+        self.krata = Krata
+        self.poleStartoweGorne = poleStartoweGorne
+        self.okreslHitbox()
+        self.okreslPoleKoncoweDolne()
         self.tekstura = tekstura
         self.kierunek = kierunek
         self.droga = droga
-        Agent1.Agenci.append(self)
+        Krata.agent = self
+
+    def okreslHitbox(self):
+        self.hitbox = pygame.Rect(self.poleStartoweGorne.start, self.poleStartoweGorne.gora, self.bok, self.bok)
+
+    def okreslPoleKoncoweDolne(self):
+        wiersz = self.poleStartoweGorne.wiersz + self.bokWPolach - 1
+        kolumna = self.poleStartoweGorne.kolumna + self.bokWPolach - 1
+        self.poleKoncoweDolne = PoleKraty(self.krata, wiersz, kolumna)
 
     def obierzNowyKierunek(self):
-        self.kierunek = KIERUNEK(random.randint(0, 3))
+        self.kierunek = Kierunek(random.randint(0, 3))
 
     def okreslDlugoscDrogi(self):
         losowa_droga = None
-        if self.kierunek == KIERUNEK.GORA:
-            losowa_droga = random.randint(0, self.hitbox.y)
-        elif self.kierunek == KIERUNEK.DOL:
-            losowa_droga = random.randint(0, WYSOKOSC_OKNA - self.hitbox.y)
-        elif self.kierunek == KIERUNEK.LEWO:
-            losowa_droga = random.randint(0, self.hitbox.x)
-        elif self.kierunek == KIERUNEK.PRAWO:
-            losowa_droga = random.randint(0, SZEROKOSC_OKNA - self.hitbox.x)
-        self.droga = losowa_droga - losowa_droga % KROK_AGENTA1
+        if self.kierunek == Kierunek.GORA:
+            losowa_droga = random.randint(0, self.poleStartoweGorne.wiersz)
+        elif self.kierunek == Kierunek.DOL:
+            losowa_droga = random.randint(0, (self.krata.liczbaPolPionowo - 1) - (
+                        self.poleStartoweGorne.wiersz + self.bokWPolach - 1))
+        elif self.kierunek == Kierunek.LEWO:
+            losowa_droga = random.randint(0, self.poleStartoweGorne.kolumna)
+        elif self.kierunek == Kierunek.PRAWO:
+            losowa_droga = random.randint(0, (self.krata.liczbaPolPoziomo - 1) - (
+                        self.poleStartoweGorne.wiersz + self.bokWPolach - 1))
+        self.droga = losowa_droga
 
     def idzWGore(self):
-        if self.hitbox.y - KROK_AGENTA1 > 0:
-            self.hitbox.y -= KROK_AGENTA1
-            self.droga -= KROK_AGENTA1
-        else:
-            self.droga = 0
+        self.poleStartoweGorne.wiersz -= 1
 
     def idzWDol(self):
-        if self.hitbox.y + KROK_AGENTA1 < WYSOKOSC_OKNA - self.hitbox.height:
-            self.hitbox.y += KROK_AGENTA1
-            self.droga -= KROK_AGENTA1
-        else:
-            self.droga = 0
+        self.poleStartoweGorne.wiersz += 1
 
     def idzWLewo(self):
-        if self.hitbox.x - KROK_AGENTA1 > 0:
-            self.hitbox.x -= KROK_AGENTA1
-            self.droga -= KROK_AGENTA1
-        else:
-            self.droga = 0
+        self.poleStartoweGorne.kolumna -= 1
 
     def idzWPrawo(self):
-        if self.hitbox.x + KROK_AGENTA1 < SZEROKOSC_OKNA - self.hitbox.width:
-            self.hitbox.x += KROK_AGENTA1
-            self.droga -= KROK_AGENTA1
-        else:
-            self.droga = 0
+        self.poleStartoweGorne.kolumna += 1
 
-    def czyWszedlesWInnegoAgenta(self):
-        for a in self.Agenci:
-            if a.hitbox.colliderect(self.hitbox) and a != self:
-                return True
-        return False
+    def wyszedlemPozaKrate(self):
+        if self.poleStartoweGorne.wiersz not in range(0, (self.krata.liczbaPolWPionie - 1) - (self.bokWPolach - 1)):
+            return False
+        elif self.poleStartoweGorne.kolumna in range(0, (self.krata.liczbaPolWPoziomie - 1) - (self.bokWPolach - 1)):
+            return False
+        else:
+            return True
 
     def ruszSie(self):
-        if self.kierunek == KIERUNEK.GORA:
+        if self.kierunek == Kierunek.GORA:
             self.idzWGore()
-        elif self.kierunek == KIERUNEK.DOL:
+        elif self.kierunek == Kierunek.DOL:
             self.idzWDol()
-        elif self.kierunek == KIERUNEK.LEWO:
+        elif self.kierunek == Kierunek.LEWO:
             self.idzWLewo()
-        elif self.kierunek == KIERUNEK.PRAWO:
+        elif self.kierunek == Kierunek.PRAWO:
             self.idzWPrawo()
-        if self.czyWszedlesWInnegoAgenta():
+        if self.wyszedlemPozaKrate():
             self.cofnijSie()
             self.zawroc()
             self.okreslDlugoscDrogi()
-            # self.ruszSie(Agenci)
 
     def cofnijSie(self):
-        if self.kierunek == KIERUNEK.GORA:
+        if self.kierunek == Kierunek.GORA:
             self.idzWDol()
-        elif self.kierunek == KIERUNEK.DOL:
+        elif self.kierunek == Kierunek.DOL:
             self.idzWGore()
-        elif self.kierunek == KIERUNEK.LEWO:
+        elif self.kierunek == Kierunek.LEWO:
             self.idzWPrawo()
-        elif self.kierunek == KIERUNEK.PRAWO:
+        elif self.kierunek == Kierunek.PRAWO:
             self.idzWLewo()
 
     def zawroc(self):
-        if self.kierunek == KIERUNEK.GORA:
-            self.kierunek = KIERUNEK.DOL
-        elif self.kierunek == KIERUNEK.DOL:
-            self.kierunek = KIERUNEK.GORA
-        elif self.kierunek == KIERUNEK.LEWO:
-            self.kierunek = KIERUNEK.PRAWO
-        elif self.kierunek == KIERUNEK.PRAWO:
-            self.kierunek = KIERUNEK.LEWO
-
-    def zaznacz_zajmowane_pola_na_kracie(self, Krata):
-        for wiersz in range(self.pole_lewe_gorne.wiersz, self.pole_lewe_gorne.wiersz + self.bok_w_polach):
-            for kolumna in range(self.pole_lewe_gorne.kolumna, self.pole_lewe_gorne.kolumna + self.bok_w_polach):
-                Krata.krata[wiersz][kolumna] = POLE.AGENT
+        if self.kierunek == Kierunek.GORA:
+            self.kierunek = Kierunek.DOL
+        elif self.kierunek == Kierunek.DOL:
+            self.kierunek = Kierunek.GORA
+        elif self.kierunek == Kierunek.LEWO:
+            self.kierunek = Kierunek.PRAWO
+        elif self.kierunek == Kierunek.PRAWO:
+            self.kierunek = Kierunek.LEWO
