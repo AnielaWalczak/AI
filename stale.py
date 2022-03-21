@@ -1,5 +1,3 @@
-from enum import Enum
-
 FPS = 120
 
 # SZEROKOSC_OKNA = 1500
@@ -20,26 +18,3 @@ BIALY = (255, 255, 255)
 JASNOSZARY1 = (200, 200, 200)
 SZARY1 = (150, 150, 150)
 ZIELONY1 = (26, 122, 26)
-
-
-class KIERUNEK(Enum):
-    GORA = 0
-    DOL = 1
-    LEWO = 2
-    PRAWO = 3
-
-
-class POLE(Enum):
-    PUSTE = 0
-    AGENT = 1
-    LAWA = 2
-
-
-class Pole():
-    bok = BOK_POLA
-
-    def __init__(self, wiersz, kolumna):
-        self.wiersz = wiersz
-        self.kolumna = kolumna
-        self.x_lewego_boku = (Pole.bok + ODSTEP_MIEDZY_POLAMI) * kolumna + ODSTEP_MIEDZY_POLAMI
-        self.y_gory = (Pole.bok + ODSTEP_MIEDZY_POLAMI) * wiersz + ODSTEP_MIEDZY_POLAMI

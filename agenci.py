@@ -1,6 +1,7 @@
 import random
 
 import pygame
+from enumy import *
 
 from stale import *
 
@@ -8,6 +9,7 @@ from stale import *
 class Agent1:
     bok = BOK_AGENTA1
     bok_w_polach = BOK_AGENTA1_W_POLACH
+    Agenci = []
 
     def __init__(self, pole_lewe_gorne, tekstura, kierunek, droga):
         self.pole_lewe_gorne = pole_lewe_gorne
@@ -15,6 +17,7 @@ class Agent1:
         self.tekstura = tekstura
         self.kierunek = kierunek
         self.droga = droga
+        Agent1.Agenci.append(self)
 
     def obierzNowyKierunek(self):
         self.kierunek = KIERUNEK(random.randint(0, 3))
@@ -59,13 +62,13 @@ class Agent1:
         else:
             self.droga = 0
 
-    def czyWszedlesWInnegoAgenta(self, Agenci):
-        for a in Agenci:
+    def czyWszedlesWInnegoAgenta(self):
+        for a in self.Agenci:
             if a.hitbox.colliderect(self.hitbox) and a != self:
                 return True
         return False
 
-    def ruszSie(self, Agenci):
+    def ruszSie(self):
         if self.kierunek == KIERUNEK.GORA:
             self.idzWGore()
         elif self.kierunek == KIERUNEK.DOL:
@@ -74,7 +77,7 @@ class Agent1:
             self.idzWLewo()
         elif self.kierunek == KIERUNEK.PRAWO:
             self.idzWPrawo()
-        if self.czyWszedlesWInnegoAgenta(Agenci):
+        if self.czyWszedlesWInnegoAgenta():
             self.cofnijSie()
             self.zawroc()
             self.okreslDlugoscDrogi()
@@ -103,4 +106,4 @@ class Agent1:
     def zaznacz_zajmowane_pola_na_kracie(self, Krata):
         for wiersz in range(self.pole_lewe_gorne.wiersz, self.pole_lewe_gorne.wiersz + self.bok_w_polach):
             for kolumna in range(self.pole_lewe_gorne.kolumna, self.pole_lewe_gorne.kolumna + self.bok_w_polach):
-                Krata[wiersz][kolumna] = POLE.AGENT
+                Krata.krata[wiersz][kolumna] = POLE.AGENT
