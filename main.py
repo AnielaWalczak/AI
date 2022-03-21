@@ -1,6 +1,6 @@
 import os
 
-from agenci import *
+from agent import *
 
 Okno = pygame.display.set_mode((SZEROKOSC_OKNA, WYSOKOSC_OKNA))
 pygame.display.set_caption("Okno1")
@@ -13,7 +13,7 @@ def dodaj_agenta():
     pom = 'test1_ikona.png'
     ikona = pygame.transform.scale(pygame.image.load(os.path.join('Ikony', pom)),
                                    (BOK_AGENTA1, BOK_AGENTA1))
-    nowy_agent = Agent(Krata, pole_lewe_gorne, ikona, Kierunek.GORA, 0)
+    Agent(Krata, pole_lewe_gorne, ikona, Kierunek.GORA, 0)
 
 
 def main():

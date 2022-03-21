@@ -3,7 +3,6 @@ import random
 from klasy import *
 
 
-# poleKoncoweDolne -> wiersz+bokWPolach-1  kolumna+bokWPolach-1
 class Agent:
     bok = BOK_AGENTA1
     bokWPolach = BOK_AGENTA1_W_POLACH
@@ -35,12 +34,12 @@ class Agent:
             losowa_droga = random.randint(0, self.poleStartoweGorne.wiersz)
         elif self.kierunek == Kierunek.DOL:
             losowa_droga = random.randint(0, (self.krata.liczbaPolPionowo - 1) - (
-                        self.poleStartoweGorne.wiersz + self.bokWPolach - 1))
+                    self.poleStartoweGorne.wiersz + self.bokWPolach - 1))
         elif self.kierunek == Kierunek.LEWO:
             losowa_droga = random.randint(0, self.poleStartoweGorne.kolumna)
         elif self.kierunek == Kierunek.PRAWO:
             losowa_droga = random.randint(0, (self.krata.liczbaPolPoziomo - 1) - (
-                        self.poleStartoweGorne.wiersz + self.bokWPolach - 1))
+                    self.poleStartoweGorne.wiersz + self.bokWPolach - 1))
         self.droga = losowa_droga
 
     def idzWGore(self):
