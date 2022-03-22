@@ -7,7 +7,6 @@ pygame.display.set_caption("Okno1")
 Krata = Krata(Okno)
 
 
-#
 def dodaj_agenta():
     pole_lewe_gorne = PoleKraty(Krata, random.randint(0, LICZBA_POL_W_PIONIE - BOK_AGENTA1_W_POLACH),
                                 random.randint(0, LICZBA_POL_W_POZIOMIE - BOK_AGENTA1_W_POLACH))
