@@ -55,14 +55,19 @@ class Krata:
                 self.krata[rzad].append(ZawartoscPola.PUSTE)
 
     def wyswietlKrate(self):
+        self.narysujKrate()
+        self.narysujAgenta()
+        pygame.display.update()
+
+    def narysujKrate(self):
         self.okno.fill(SZARY1)
         for rzad in range(self.liczbaPolPionowo):
             for kolumna in range(self.liczbaPolPoziomo):
                 start = (self.odstepMiedzyPolami + self.bokPola) * kolumna + self.odstepMiedzyPolami
                 gora = (self.odstepMiedzyPolami + self.bokPola) * rzad + self.odstepMiedzyPolami
                 pygame.draw.rect(self.okno, BIALY, [start, gora, self.bokPola, self.bokPola])
-        pygame.display.update()
 
-    def wyswietlAgenta(self):
-        self.okno.blit(self.agent.tekstura, (self.agent.hitbox.x, self.agent.hitbox.y))
-        pygame.display.update()
+    def narysujAgenta(self):
+        if self.agent is not None:
+            self.okno.blit(self.agent.tekstura, (self.agent.hitbox.x, self.agent.hitbox.y))
+            self.agent.ruszSie()
