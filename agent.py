@@ -64,6 +64,14 @@ class Agent:
         else:
             return False
 
+    # ZROBIC sciany
+    # def wszedlemWSciane(self):
+    #     for wiersz in range (self.poleStartoweGorne.wiersz,self.poleKoncoweDolne.wiersz):
+    #         for kolumna in range(self.poleStartoweGorne.kolumna,self.poleKoncoweDolne.kolumna):
+    #             if self.krata.krata[wiersz][kolumna]==ZawartoscPola.SCIANA:
+    #                 return True
+    #     return False
+
     def zawroc(self):
         if self.kierunek == Kierunek.GORA:
             self.kierunek = Kierunek.DOL

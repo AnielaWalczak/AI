@@ -1,6 +1,6 @@
 import pygame
 
-from enumy import *
+from enumy_i_slowniki import *
 from stale import *
 
 
@@ -44,29 +44,38 @@ class Krata:
         self.liczbaPolPionowo = LICZBA_POL_W_PIONIE
         self.bokPola = BOK_POLA
         self.odstepMiedzyPolami = ODSTEP_MIEDZY_POLAMI
-        self.krata = self.utworzPustaKrate()
+        self.utworzPustaKrate()
         self.agent = None
 
     def utworzPustaKrate(self):
         self.krata = []
-        for rzad in range(self.liczbaPolPionowo):
+        for wiersz in range(self.liczbaPolPionowo):
             self.krata.append([])
             for kolumna in range(self.liczbaPolPoziomo):
-                self.krata[rzad].append(ZawartoscPola.PUSTE)
+                zawartosc_pola = ZawartoscPola.PUSTE
+                # ZROBIC sciany
+                # if wiersz in (0, self.liczbaPolPionowo - 1) or kolumna in (0, self.liczbaPolPoziomo - 1):
+                #      zawartosc_pola = ZawartoscPola.SCIANA
+                # if wiersz in range(6,18) and kolumna in (5,15,25,35):
+                #      zawartosc_pola = ZawartoscPola.SCIANA
+                # if wiersz in (4,22) and kolumna in range (10,35):
+                #      zawartosc_pola = ZawartoscPola.SCIANA
+                self.krata[wiersz].append(zawartosc_pola)
 
     def wyswietlKrate(self):
-        # self.narysujKrate()
-        self.narysujKrateAlternatywnie()
+        self.narysujKrate()
+        # self.narysujKrateAlternatywnie()
         self.narysujAgenta()
         pygame.display.update()
 
     def narysujKrate(self):
         self.okno.fill(SZARY1)
-        for rzad in range(self.liczbaPolPionowo):
+        for wiersz in range(self.liczbaPolPionowo):
             for kolumna in range(self.liczbaPolPoziomo):
                 start = (self.odstepMiedzyPolami + self.bokPola) * kolumna + self.odstepMiedzyPolami
-                gora = (self.odstepMiedzyPolami + self.bokPola) * rzad + self.odstepMiedzyPolami
-                pygame.draw.rect(self.okno, BIALY, [start, gora, self.bokPola, self.bokPola])
+                gora = (self.odstepMiedzyPolami + self.bokPola) * wiersz + self.odstepMiedzyPolami
+                kolor_pola = ZawartoscPolaNaKolorPola[self.krata[wiersz][kolumna]]
+                pygame.draw.rect(self.okno, kolor_pola, [start, gora, self.bokPola, self.bokPola])
 
     def narysujKrateAlternatywnie(self):
         self.okno.fill(SZARY1)
