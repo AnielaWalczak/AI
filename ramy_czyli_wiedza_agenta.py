@@ -75,3 +75,47 @@ class Pomieszczenie:
 
     def dodajPole(self, pole: PoleMapy):
         self.zajmowanePola.append(pole)
+
+class Etykieta:
+    def __init__(self, nazwaTowaru, nazwaNadawcy, dataZapakowania, id, niePietrowac, zachowacSuchosc, ostroznie, uwagaSzklo):
+        # realistyczne? informacje na paczce
+        # kategoryzowanie towaru może odbywać się na podstawie jego nazwy
+        self.nazwaTowaru = nazwaTowaru
+        self.nazwaNadawcy = nazwaNadawcy
+        self.dataZapakowania = dataZapakowania
+        self.id = id
+        # nalepki na paczce - być może nie będą na etykiecie, a trzeba je będzie rozpoznać na obrazie
+        self.niePietrowac = niePietrowac
+        self.zachowacSuchosc = zachowacSuchosc
+        self.ostroznie = ostroznie
+        self.uwagaSzklo = uwagaSzklo
+
+class Paczka:
+    def __init__(self,wymiary: Wymiary, waga, etykieta: Etykieta):
+        self.wymiary = wymiary
+        self.waga = waga
+        self.etykieta = etykieta
+
+class Paleta:
+    def __init__(self):
+        self.Paczki = []
+
+    def dodajPaczke(self, paczka: Paczka):
+        self.Paczki.append(paczka)
+
+class Nadawca:
+    def __init__(self,nazwa, id):
+        self.nazwa = nazwa
+        self.id = id
+        # plus dodatkowe informacje mogące wpływać na priorytet rozpakowania transportu / miejsce składowania paczek?
+
+class Transport:
+    def __init__(self, dataPrzyjecia, nadawca: Nadawca, id):
+        Palety = []
+        self.dataPrzyjecia = dataPrzyjecia
+        self.nadawca = nadawca
+        self.id = id
+
+    # wyliczanie priorytetu rozpakowania transportu ?
+    # def okrescPriorytet(self):
+    #     self.priorytet =
