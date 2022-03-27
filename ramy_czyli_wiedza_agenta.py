@@ -1,5 +1,6 @@
 from enumy_i_slowniki import *
 from stale import *
+from krata import *
 
 
 class Wymiary:
@@ -48,19 +49,46 @@ class Polka:
         self.wymiary = wymiary
         self.udzwig = udzwig
         self.wysokoscOdPodlogi = wysokoscOdPodlogi
+        # zakładamy że aby położyć paczkę na półkę, agent musi stać dokładnie na polach kraty, określonych w atrybucie dostęp
+        # atrybut dostęp składa się z 9 pól ponieważ tyle miejsca na kracie zajmuje agent
+        # utworzyłam szafki "wertykalnie" oraz zakładam że do półki można się dostać tylko z jednej strony (na razie tylko z lewej, ale można teżdodać, że tylko z prawej)
+        self.dostep = []
+        self.zajmowanePola = []
+
+    def dodajPole(self, pole: PoleKraty):
+        self.zajmowanePola.append(pole)
+
+    def dodajDostep(self, pole: PoleKraty):
+        self.dostep.append(pole)
 
 
 class Szafka:
-    def __init__(self, wymiary: Wymiary):
+    def __init__(self, wymiary: Wymiary, ilosc_polek, poczatek_kolumna, poczatek_wiersz1, Krata: Krata):
         self.wymiary = wymiary
         self.Polki = []
         self.zajmowanePola = []
+        self.utworzPustaSzafke(ilosc_polek, poczatek_kolumna, poczatek_wiersz1, Krata)
 
     def dodajPolke(self, polka: Polka):
         self.Polki.append(polka)
 
-    def dodajPole(self, pole: PoleMapy):
+    def dodajPole(self, pole: PoleKraty):
         self.zajmowanePola.append(pole)
+
+    def utworzPustaSzafke(self, ilosc_polek, poczatek_wiersz1, poczatek_kolumna, Krata: Krata):
+        for i in range(ilosc_polek):
+            wymiar_polki = Wymiary(0, 0, 0)
+            polka = Polka(wymiar_polki, 0, 0)
+            for m in range(DUZA_SZAFA):  # wiersz
+                poczatek_wiersz = poczatek_wiersz1 + i * 3 + m
+                for n in range(DUZA_SZAFA):  # kolumna
+                    Krata.krata[poczatek_wiersz][poczatek_kolumna + n] = ZawartoscPola.SCIANA
+                    pole = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna)
+                    polka.dodajPole(pole)
+                    self.dodajPole(pole)
+                    pole_dostepu = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n - BOK_AGENTA1_W_POLACH) #dostęp z lewej strony
+                    polka.dodajDostep(pole_dostepu)
+            self.dodajPolke(polka)
 
 
 class Pomieszczenie:

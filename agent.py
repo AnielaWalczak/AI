@@ -23,7 +23,7 @@ class Agent:
         self.zrobKrokWMoimKierunku()
         self.droga -= 1
         self.okreslPolozenie()
-        if self.wyszedlemPozaKrate():
+        if self.wyszedlemPozaKrate() or self.wszedlemWSciane():
             self.cofnijSie()
             self.zawroc()
             self.okreslDlugoscDrogi()
@@ -65,12 +65,12 @@ class Agent:
             return False
 
     # ZROBIC sciany
-    # def wszedlemWSciane(self):
-    #     for wiersz in range (self.poleStartoweGorne.wiersz,self.poleKoncoweDolne.wiersz):
-    #         for kolumna in range(self.poleStartoweGorne.kolumna,self.poleKoncoweDolne.kolumna):
-    #             if self.krata.krata[wiersz][kolumna]==ZawartoscPola.SCIANA:
-    #                 return True
-    #     return False
+    def wszedlemWSciane(self):
+        for wiersz in range (self.poleStartoweGorne.wiersz,self.poleKoncoweDolne.wiersz+1):
+            for kolumna in range(self.poleStartoweGorne.kolumna,self.poleKoncoweDolne.kolumna+1):
+               if self.krata.krata[wiersz][kolumna]==ZawartoscPola.SCIANA:
+                  return True
+        return False
 
     def zawroc(self):
         if self.kierunek == Kierunek.GORA:
