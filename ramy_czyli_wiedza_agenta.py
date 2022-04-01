@@ -44,15 +44,14 @@ class WarunkiPowietrza:
         self.wilgotnosc = wilgotnosc
 
 
-class Polka:
-    def __init__(self, wymiary: Wymiary, udzwig, wysokoscOdPodlogi):
+class Miejsce: #wcześniej półka
+    def __init__(self, numer, wymiary: Wymiary, udzwig, wysokoscOdPodlogi):
+        self.numer=numer
         self.wymiary = wymiary
         self.udzwig = udzwig
         self.wysokoscOdPodlogi = wysokoscOdPodlogi
-        # zakładamy że aby położyć paczkę na półkę, agent musi stać dokładnie na polach kraty, określonych w atrybucie dostęp
-        # atrybut dostęp składa się z 9 pól ponieważ tyle miejsca na kracie zajmuje agent
-        # utworzyłam szafki "wertykalnie" oraz zakładam że do półki można się dostać tylko z jednej strony (na razie tylko z lewej, ale można teżdodać, że tylko z prawej)
-        self.dostep = []
+        #self.status = 'wolne'
+        self.dostep=[]
         self.zajmowanePola = []
 
     def dodajPole(self, pole: PoleKraty):
@@ -63,33 +62,43 @@ class Polka:
 
 
 class Szafka:
-    def __init__(self, wymiary: Wymiary, ilosc_polek, poczatek_kolumna, poczatek_wiersz1, Krata: Krata):
+    def __init__(self, numerSzafki, wymiary: Wymiary, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna, poczatek_wiersz1, Krata: Krata):
+        self.numerSzafki=numerSzafki
         self.wymiary = wymiary
-        self.Polki = []
+        self.iloscPolek = iloscPolek
+        self.iloscMiejscNaPolce = iloscMiejscNaPolce
+        self.dostepZeStrony=dostepZeStrony
+        self.Miejsca = []
         self.zajmowanePola = []
-        self.utworzPustaSzafke(ilosc_polek, poczatek_kolumna, poczatek_wiersz1, Krata)
+        self.utworzPustaSzafke(numerSzafki,iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna, poczatek_wiersz1,Krata)
 
-    def dodajPolke(self, polka: Polka):
-        self.Polki.append(polka)
+    def dodajMiejsce(self, miejsce: Miejsce):
+        self.Miejsca.append(miejsce)
 
     def dodajPole(self, pole: PoleKraty):
         self.zajmowanePola.append(pole)
 
-    def utworzPustaSzafke(self, ilosc_polek, poczatek_wiersz1, poczatek_kolumna, Krata: Krata):
-        for i in range(ilosc_polek):
-            wymiar_polki = Wymiary(0, 0, 0)
-            polka = Polka(wymiar_polki, 0, 0)
-            for m in range(DUZA_SZAFA):  # wiersz
-                poczatek_wiersz = poczatek_wiersz1 + i * 3 + m
-                for n in range(DUZA_SZAFA):  # kolumna
-                    Krata.krata[poczatek_wiersz][poczatek_kolumna + n] = ZawartoscPola.SCIANA
-                    pole = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna)
-                    polka.dodajPole(pole)
-                    self.dodajPole(pole)
-                    pole_dostepu = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n - BOK_AGENTA1_W_POLACH) #dostęp z lewej strony
-                    polka.dodajDostep(pole_dostepu)
-            self.dodajPolke(polka)
-
+    def utworzPustaSzafke(self, numerSzafki, iloscPolek, iloscMiejscNaPolce, dostępZeStrony, poczatek_wiersz1, poczatek_kolumna, Krata: Krata):
+        for i in range(iloscPolek):
+            for j in range(iloscMiejscNaPolce):
+                wymiar_miejsca = Wymiary(0, 0, 0)
+                numerMiejsca = self.numerSzafki + "/" + str(i) + "/" + str(j)
+                miejsce = Miejsce(numerMiejsca,wymiar_miejsca, 0, 0)
+                #wypełnianie pól "zajmowane miejsca" i "dostęp"
+                for m in range(DUZA_SZAFA):  # wiersz
+                    poczatek_wiersz = poczatek_wiersz1 + j * 3 + m
+                    for n in range(DUZA_SZAFA):  # kolumna
+                        Krata.krata[poczatek_wiersz][poczatek_kolumna + n] = ZawartoscPola.SCIANA
+                        pole = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna+n)
+                        miejsce.dodajPole(pole)
+                        self.dodajPole(pole)
+                        if dostępZeStrony=="L":
+                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n - BOK_AGENTA1_W_POLACH) #dostęp z lewej strony
+                            miejsce.dodajDostep(pole_dostepu)
+                        elif dostępZeStrony == "P":
+                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n + BOK_AGENTA1_W_POLACH)  # dostęp z prawej strony strony
+                            miejsce.dodajDostep(pole_dostepu)
+                self.dodajMiejsce(miejsce)
 
 class Pomieszczenie:
     def __init__(self, warunkiPowietrza: WarunkiPowietrza, wysokoscSufitu):
