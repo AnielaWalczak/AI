@@ -123,3 +123,18 @@ class Agent:
 
     def idzWPrawo(self):
         self.poleStartoweGorne.kolumna += 1
+
+    def bfs(graph, start, cel):
+        sciezka = [start]
+        wierzcholek_sciezka = [start, sciezka]
+        bfs_kolejka = [wierzcholek_sciezka]
+        odwiedzone = set()
+        while bfs_kolejka:
+            aktualne, sciezka = bfs_kolejka.pop(0)
+            odwiedzone.add(aktualne)
+            for neighbor in graph[aktualne]:
+                if neighbor not in odwiedzone:
+                    if neighbor is cel:
+                        return sciezka + [neighbor]
+                    else:
+                        bfs_kolejka.append([neighbor, sciezka + [neighbor]])
