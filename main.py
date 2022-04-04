@@ -3,11 +3,10 @@ import ctypes
 
 from agent import *
 from ramy_czyli_wiedza_agenta import *
+from bfs import *
 
 #aby działalo w oknie + rozdzielczość ekranu
-ctypes.windll.shcore.SetProcessDpiAwareness(1)
-
-
+#ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 Okno = pygame.display.set_mode((SZEROKOSC_OKNA, WYSOKOSC_OKNA))
 pygame.display.set_caption("Okno1")
@@ -29,15 +28,23 @@ def dodaj_szafke(numerSzafki, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, po
     Pomieszczenie.dodajSzafke(szafka)
 
 def main():
-    dodaj_szafke("A", 2, 10, "L", 0, 20) #przykładowe wartości dla szafek
-    dodaj_szafke("B", 2, 10, "P", 0, 24)
-    dodaj_szafke("C", 2, 10, "L", 0, 40)
-    dodaj_szafke("D", 2, 10, "P", 0, 44)
-    dodaj_szafke("E", 2, 10, "L", 0, 60)
-    dodaj_szafke("F", 2, 10, "P", 0, 64)
-    dodaj_szafke("G", 2, 10, "L", 0, 80)
-    dodaj_szafke("H", 2, 10, "P", 0, 84)
+    dodaj_szafke("A", 2, 7, "P", 0, 0)
+    dodaj_szafke("B", 2, 7, "L", 0, 3)
+    dodaj_szafke("C", 2, 7, "P", 0, 4)
+    dodaj_szafke("D", 2, 7, "L", 0, 7)
+    dodaj_szafke("E", 2, 7, "P", 0, 8)
+    dodaj_szafke("F", 2, 7, "L", 0, 11)
+    dodaj_szafke("G", 2, 7, "P", 0, 12)
+    dodaj_szafke("H", 2, 7, "L", 0, 15)
+    dodaj_szafke("I", 2, 7, "P", 0, 16)
+    dodaj_szafke("J", 2, 7, "L", 0, 19)
     dodaj_agenta()
+    # cel to pole kraty gdzie ma stać agent, aby położyć paczkę na półkę, w obiekcie klasy Miejsce jest to artybut dostęp
+    cel = PoleKraty(Krata, 1, 14)
+    # start to pole startowe agenta, == pole_lewe_gorne
+    start = PoleKraty(Krata, LICZBA_POL_W_PIONIE-BOK_AGENTA1_W_POLACH, int(LICZBA_POL_W_POZIOMIE/2))
+    bfsList = bfs(Krata, start, cel)
+
     klatkaz = pygame.time.Clock()
     warunek_dzialania = True
     while warunek_dzialania:

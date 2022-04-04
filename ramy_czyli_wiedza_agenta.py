@@ -86,7 +86,7 @@ class Szafka:
                 miejsce = Miejsce(numerMiejsca,wymiar_miejsca, 0, 0)
                 #wypełnianie pól "zajmowane miejsca" i "dostęp"
                 for m in range(DUZA_SZAFA):  # wiersz
-                    poczatek_wiersz = poczatek_wiersz1 + j * 3 + m
+                    poczatek_wiersz = poczatek_wiersz1 + j * DUZA_SZAFA + m
                     for n in range(DUZA_SZAFA):  # kolumna
                         Krata.krata[poczatek_wiersz][poczatek_kolumna + n] = ZawartoscPola.SCIANA
                         pole = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna+n)
