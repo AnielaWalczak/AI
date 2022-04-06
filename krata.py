@@ -36,6 +36,9 @@ class PoleKraty:
     wiersz = property(getWiersz, setWiersz)
     kolumna = property(getKolumna, setKolumna)
 
+    def skopiuj(self):
+        return PoleKraty(self.krata, self.wiersz, self.kolumna)
+
 
 class Krata:
     def __init__(self, okno):
@@ -65,7 +68,7 @@ class Krata:
     def wyswietlKrate(self):
         self.narysujKrate()
         # self.narysujKrateAlternatywnie()
-        self.narysujAgenta()
+        # self.narysujAgenta()
         pygame.display.update()
 
     def narysujKrate(self):
@@ -90,7 +93,7 @@ class Krata:
             pygame.draw.line(self.okno, CZARNY, (0, new_height), (SZEROKOSC_OKNA, new_height), ODSTEP_MIEDZY_POLAMI)
             pygame.draw.line(self.okno, CZARNY, (new_width, 0), (new_width, WYSOKOSC_OKNA), ODSTEP_MIEDZY_POLAMI)
 
-    def narysujAgenta(self):
-        if self.agent is not None:
-            self.okno.blit(self.agent.tekstura, (self.agent.hitbox.x, self.agent.hitbox.y))
-            self.agent.ruszSie()
+    # def narysujAgenta(self):
+    #     if self.agent is not None:
+    #         self.okno.blit(self.agent.tekstura, (self.agent.hitbox.x, self.agent.hitbox.y))
+    #         self.agent.ruszSie()

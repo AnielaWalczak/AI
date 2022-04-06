@@ -1,24 +1,28 @@
 import random
+from collections import deque
 
+from bfs import Stan, Akcja, graphsearch
 from krata import *
 
 
 class Agent:
+    cel: Stan
     bok = BOK_AGENTA1
     bokWPolach = BOK_AGENTA1_W_POLACH
 
-    def __init__(self, Krata, poleStartoweGorne, tekstura):
+    def __init__(self, Krata, poleStartoweGorne: PoleKraty, tekstura):
         self.krata = Krata
         self.poleStartoweGorne = poleStartoweGorne
         self.tekstura = tekstura
         self.okreslPolozenie()
-        self.obierzNowyKierunek()
+        self.obierzLosowyKierunek()
         self.okreslDlugoscDrogi()
         Krata.agent = self
+        self.cel = None
 
     def ruszSie(self):
         if self.droga <= 0:
-            self.obierzNowyKierunek()
+            self.obierzLosowyKierunek()
             self.okreslDlugoscDrogi()
         self.zrobKrokWMoimKierunku()
         self.droga -= 1
@@ -28,10 +32,10 @@ class Agent:
             self.zawroc()
             self.okreslDlugoscDrogi()
 
-    def obierzNowyKierunek(self):
+    def obierzLosowyKierunek(self):
         self.kierunek = Kierunek(random.randint(0, 3))
         if self.maxDlugoscDrogiWMoimKierunku() < 1:
-            self.obierzNowyKierunek()
+            self.obierzLosowyKierunek()
 
     def okreslDlugoscDrogi(self):
         self.droga = random.randint(1, self.maxDlugoscDrogiWMoimKierunku())
@@ -66,75 +70,115 @@ class Agent:
 
     # ZROBIC sciany
     def wszedlemWSciane(self):
-        for wiersz in range (self.poleStartoweGorne.wiersz,self.poleKoncoweDolne.wiersz+1):
-            for kolumna in range(self.poleStartoweGorne.kolumna,self.poleKoncoweDolne.kolumna+1):
-               if self.krata.krata[wiersz][kolumna]==ZawartoscPola.SCIANA:
-                  return True
+        for wiersz in range(self.poleStartoweGorne.wiersz, self.poleKoncoweDolne.wiersz + 1):
+            for kolumna in range(self.poleStartoweGorne.kolumna, self.poleKoncoweDolne.kolumna + 1):
+                if self.krata.krata[wiersz][kolumna] == ZawartoscPola.SCIANA:
+                    return True
         return False
 
     def zawroc(self):
-        if self.kierunek == Kierunek.GORA:
-            self.kierunek = Kierunek.DOL
-        elif self.kierunek == Kierunek.DOL:
-            self.kierunek = Kierunek.GORA
-        elif self.kierunek == Kierunek.LEWO:
-            self.kierunek = Kierunek.PRAWO
-        elif self.kierunek == Kierunek.PRAWO:
-            self.kierunek = Kierunek.LEWO
+        if self.kierunek == Kierunek.POLNOC:
+            self.kierunek = Kierunek.POLUDNIE
+        elif self.kierunek == Kierunek.POLUDNIE:
+            self.kierunek = Kierunek.POLNOC
+        elif self.kierunek == Kierunek.ZACHOD:
+            self.kierunek = Kierunek.WSCHOD
+        elif self.kierunek == Kierunek.WSCHOD:
+            self.kierunek = Kierunek.ZACHOD
 
     def maxDlugoscDrogiWMoimKierunku(self):
-        if self.kierunek == Kierunek.GORA:
+        if self.kierunek == Kierunek.POLNOC:
             return self.poleStartoweGorne.wiersz
-        elif self.kierunek == Kierunek.DOL:
+        elif self.kierunek == Kierunek.POLUDNIE:
             return self.krata.liczbaPolPionowo - self.poleKoncoweDolne.wiersz - 1
-        elif self.kierunek == Kierunek.LEWO:
+        elif self.kierunek == Kierunek.ZACHOD:
             return self.poleStartoweGorne.kolumna
-        elif self.kierunek == Kierunek.PRAWO:
+        elif self.kierunek == Kierunek.WSCHOD:
             return self.krata.liczbaPolPoziomo - self.poleKoncoweDolne.kolumna - 1
 
     def zrobKrokWMoimKierunku(self):
-        if self.kierunek == Kierunek.GORA:
-            self.idzWGore()
-        elif self.kierunek == Kierunek.DOL:
-            self.idzWDol()
-        elif self.kierunek == Kierunek.LEWO:
-            self.idzWLewo()
-        elif self.kierunek == Kierunek.PRAWO:
-            self.idzWPrawo()
+        if self.kierunek == Kierunek.POLNOC:
+            self.idzNaPolnoc()
+        elif self.kierunek == Kierunek.POLUDNIE:
+            self.idzNaPoludnie()
+        elif self.kierunek == Kierunek.ZACHOD:
+            self.idzNaZachod()
+        elif self.kierunek == Kierunek.WSCHOD:
+            self.idzNaWschod()
 
     def zrobKrokWOdwrotnymKierunku(self):
-        if self.kierunek == Kierunek.GORA:
-            self.idzWDol()
-        elif self.kierunek == Kierunek.DOL:
-            self.idzWGore()
-        elif self.kierunek == Kierunek.LEWO:
-            self.idzWPrawo()
-        elif self.kierunek == Kierunek.PRAWO:
-            self.idzWLewo()
+        if self.kierunek == Kierunek.POLNOC:
+            self.idzNaPoludnie()
+        elif self.kierunek == Kierunek.POLUDNIE:
+            self.idzNaPolnoc()
+        elif self.kierunek == Kierunek.ZACHOD:
+            self.idzNaWschod()
+        elif self.kierunek == Kierunek.WSCHOD:
+            self.idzNaZachod()
 
-    def idzWGore(self):
+    def idzNaPolnoc(self):
         self.poleStartoweGorne.wiersz -= 1
 
-    def idzWDol(self):
+    def idzNaPoludnie(self):
         self.poleStartoweGorne.wiersz += 1
 
-    def idzWLewo(self):
+    def idzNaZachod(self):
         self.poleStartoweGorne.kolumna -= 1
 
-    def idzWPrawo(self):
+    def idzNaWschod(self):
         self.poleStartoweGorne.kolumna += 1
 
-    def bfs(graph, start, cel):
-        sciezka = [start]
-        wierzcholek_sciezka = [start, sciezka]
-        bfs_kolejka = [wierzcholek_sciezka]
-        odwiedzone = set()
-        while bfs_kolejka:
-            aktualne, sciezka = bfs_kolejka.pop(0)
-            odwiedzone.add(aktualne)
-            for neighbor in graph[aktualne]:
-                if neighbor not in odwiedzone:
-                    if neighbor is cel:
-                        return sciezka + [neighbor]
-                    else:
-                        bfs_kolejka.append([neighbor, sciezka + [neighbor]])
+    # def bfs(self,graph, start, cel):
+    #     sciezka = [start]
+    #     wierzcholek_sciezka = [start, sciezka]
+    #     bfs_kolejka = [wierzcholek_sciezka]
+    #     odwiedzone = set()
+    #     while bfs_kolejka:
+    #         aktualne, sciezka = bfs_kolejka.pop(0)
+    #         odwiedzone.add(aktualne)
+    #         for neighbor in graph[aktualne]:
+    #             if neighbor not in odwiedzone:
+    #                 if neighbor is cel:
+    #                     return sciezka + [neighbor]
+    #                 else:
+    #                     bfs_kolejka.append([neighbor, sciezka + [neighbor]])
+
+    def idzDoCelu(self, klatkaz):
+        stan_poczatkowy = Stan(self.kierunek, self.poleStartoweGorne)
+        stos_akcji = graphsearch(stan_poczatkowy, self.cel)
+        if stos_akcji == False:
+            print("Nie można dotrzeć.")
+        else:
+            self.wykonaj_stos_akcji(stos_akcji, klatkaz)
+            print("Dotarłem.")
+
+        self.krata.krata[self.cel.poleStartoweGorne.wiersz][
+            self.cel.poleStartoweGorne.kolumna] = ZawartoscPola.PUSTE  ##chwilowo-przeniesc pozniej
+
+        self.cel = None
+
+    def wykonaj_stos_akcji(self, stos_akcji: deque, klatkaz):
+        while stos_akcji:
+            klatkaz.tick(FPS)
+            self.narysujAgenta()
+            akcja = stos_akcji.pop()
+            print(akcja.name, end=" ")
+            if akcja == Akcja.KROK_W_PRZOD:
+                self.zrobKrokWMoimKierunku()
+                self.okreslPolozenie()
+            elif akcja == Akcja.OBROT_W_LEWO:
+                self.obrocSieWLewo()
+            elif akcja == Akcja.OBROT_W_PRAWO:
+                self.obrocSieWPrawo()
+        print()
+
+    def obrocSieWLewo(self):
+        self.kierunek = self.kierunek.kierunekNaLewo()
+
+    def obrocSieWPrawo(self):
+        self.kierunek = self.kierunek.kierunekNaPrawo()
+
+    def narysujAgenta(self):
+        self.krata.narysujKrate()
+        self.krata.okno.blit(self.tekstura, (self.hitbox.x, self.hitbox.y))
+        pygame.display.update()

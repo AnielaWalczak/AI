@@ -4,18 +4,40 @@ from stale import *
 
 
 class Kierunek(Enum):
-    GORA = 0
-    DOL = 1
-    LEWO = 2
-    PRAWO = 3
+    POLNOC = 0
+    POLUDNIE = 1
+    ZACHOD = 2
+    WSCHOD = 3
+
+    def kierunekNaLewo(self):
+        if self == Kierunek.POLNOC:
+            return Kierunek.ZACHOD
+        elif self == Kierunek.POLUDNIE:
+            return Kierunek.WSCHOD
+        elif self == Kierunek.ZACHOD:
+            return Kierunek.POLUDNIE
+        elif self == Kierunek.WSCHOD:
+            return Kierunek.POLNOC
+
+    def kierunekNaPrawo(self):
+        if self == Kierunek.POLNOC:
+            return Kierunek.WSCHOD
+        elif self == Kierunek.POLUDNIE:
+            return Kierunek.ZACHOD
+        elif self == Kierunek.ZACHOD:
+            return Kierunek.POLNOC
+        elif self == Kierunek.WSCHOD:
+            return Kierunek.POLUDNIE
 
 
 class ZawartoscPola(Enum):
     PUSTE = 0
     SCIANA = 1
+    CEL = 2
 
 
 ZawartoscPolaNaKolorPola = {
     ZawartoscPola.PUSTE: BIALY,
-    ZawartoscPola.SCIANA: CIEMNY_BRAZOWY1
+    ZawartoscPola.SCIANA: CIEMNY_BRAZOWY1,
+    ZawartoscPola.CEL: ZIELONY1
 }

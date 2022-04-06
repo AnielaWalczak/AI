@@ -1,5 +1,3 @@
-from enumy_i_slowniki import *
-from stale import *
 from krata import *
 
 
@@ -44,14 +42,14 @@ class WarunkiPowietrza:
         self.wilgotnosc = wilgotnosc
 
 
-class Miejsce: #wcześniej półka
+class Miejsce:  # wcześniej półka
     def __init__(self, numer, wymiary: Wymiary, udzwig, wysokoscOdPodlogi):
-        self.numer=numer
+        self.numer = numer
         self.wymiary = wymiary
         self.udzwig = udzwig
         self.wysokoscOdPodlogi = wysokoscOdPodlogi
-        #self.status = 'wolne'
-        self.dostep=[]
+        # self.status = 'wolne'
+        self.dostep = []
         self.zajmowanePola = []
 
     def dodajPole(self, pole: PoleKraty):
@@ -62,15 +60,17 @@ class Miejsce: #wcześniej półka
 
 
 class Szafka:
-    def __init__(self, numerSzafki, wymiary: Wymiary, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna, poczatek_wiersz1, Krata: Krata):
-        self.numerSzafki=numerSzafki
+    def __init__(self, numerSzafki, wymiary: Wymiary, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna,
+                 poczatek_wiersz1, Krata: Krata):
+        self.numerSzafki = numerSzafki
         self.wymiary = wymiary
         self.iloscPolek = iloscPolek
         self.iloscMiejscNaPolce = iloscMiejscNaPolce
-        self.dostepZeStrony=dostepZeStrony
+        self.dostepZeStrony = dostepZeStrony
         self.Miejsca = []
         self.zajmowanePola = []
-        self.utworzPustaSzafke(numerSzafki,iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna, poczatek_wiersz1,Krata)
+        self.utworzPustaSzafke(numerSzafki, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna,
+                               poczatek_wiersz1, Krata)
 
     def dodajMiejsce(self, miejsce: Miejsce):
         self.Miejsca.append(miejsce)
@@ -78,27 +78,31 @@ class Szafka:
     def dodajPole(self, pole: PoleKraty):
         self.zajmowanePola.append(pole)
 
-    def utworzPustaSzafke(self, numerSzafki, iloscPolek, iloscMiejscNaPolce, dostępZeStrony, poczatek_wiersz1, poczatek_kolumna, Krata: Krata):
+    def utworzPustaSzafke(self, numerSzafki, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_wiersz1,
+                          poczatek_kolumna, Krata: Krata):
         for i in range(iloscPolek):
             for j in range(iloscMiejscNaPolce):
                 wymiar_miejsca = Wymiary(0, 0, 0)
                 numerMiejsca = self.numerSzafki + "/" + str(i) + "/" + str(j)
-                miejsce = Miejsce(numerMiejsca,wymiar_miejsca, 0, 0)
-                #wypełnianie pól "zajmowane miejsca" i "dostęp"
+                miejsce = Miejsce(numerMiejsca, wymiar_miejsca, 0, 0)
+                # wypełnianie pól "zajmowane miejsca" i "dostęp"
                 for m in range(DUZA_SZAFA):  # wiersz
                     poczatek_wiersz = poczatek_wiersz1 + j * DUZA_SZAFA + m
                     for n in range(DUZA_SZAFA):  # kolumna
                         Krata.krata[poczatek_wiersz][poczatek_kolumna + n] = ZawartoscPola.SCIANA
-                        pole = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna+n)
+                        pole = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n)
                         miejsce.dodajPole(pole)
                         self.dodajPole(pole)
-                        if dostępZeStrony=="L":
-                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n - BOK_AGENTA1_W_POLACH) #dostęp z lewej strony
+                        if dostepZeStrony == "L":
+                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz,
+                                                     poczatek_kolumna + n - BOK_AGENTA1_W_POLACH)  # dostęp z lewej strony
                             miejsce.dodajDostep(pole_dostepu)
-                        elif dostępZeStrony == "P":
-                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n + BOK_AGENTA1_W_POLACH)  # dostęp z prawej strony strony
+                        elif dostepZeStrony == "P":
+                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz,
+                                                     poczatek_kolumna + n + BOK_AGENTA1_W_POLACH)  # dostęp z prawej strony strony
                             miejsce.dodajDostep(pole_dostepu)
                 self.dodajMiejsce(miejsce)
+
 
 class Pomieszczenie:
     def __init__(self, warunkiPowietrza: WarunkiPowietrza, wysokoscSufitu):
@@ -113,25 +117,29 @@ class Pomieszczenie:
     def dodajPole(self, pole: PoleMapy):
         self.zajmowanePola.append(pole)
 
+
 class Etykieta:
-    def __init__(self, nazwaTowaru, nazwaNadawcy, dataZapakowania, id, niePietrowac, zachowacSuchosc, ostroznie, uwagaSzklo):
+    def __init__(self, nazwaTowaru, nazwaNadawcy, dataZapakowania, iD, niePietrowac, zachowacSuchosc, ostroznie,
+                 uwagaSzklo):
         # realistyczne? informacje na paczce
         # kategoryzowanie towaru może odbywać się na podstawie jego nazwy
         self.nazwaTowaru = nazwaTowaru
         self.nazwaNadawcy = nazwaNadawcy
         self.dataZapakowania = dataZapakowania
-        self.id = id
+        self.id = iD
         # nalepki na paczce - być może nie będą na etykiecie, a trzeba je będzie rozpoznać na obrazie
         self.niePietrowac = niePietrowac
         self.zachowacSuchosc = zachowacSuchosc
         self.ostroznie = ostroznie
         self.uwagaSzklo = uwagaSzklo
 
+
 class Paczka:
-    def __init__(self,wymiary: Wymiary, waga, etykieta: Etykieta):
+    def __init__(self, wymiary: Wymiary, waga, etykieta: Etykieta):
         self.wymiary = wymiary
         self.waga = waga
         self.etykieta = etykieta
+
 
 class Paleta:
     def __init__(self):
@@ -140,18 +148,20 @@ class Paleta:
     def dodajPaczke(self, paczka: Paczka):
         self.Paczki.append(paczka)
 
+
 class Nadawca:
-    def __init__(self,nazwa, id):
+    def __init__(self, nazwa, iD):
         self.nazwa = nazwa
-        self.id = id
+        self.id = iD
         # plus dodatkowe informacje mogące wpływać na priorytet rozpakowania transportu / miejsce składowania paczek?
 
+
 class Transport:
-    def __init__(self, dataPrzyjecia, nadawca: Nadawca, id):
+    def __init__(self, dataPrzyjecia, nadawca: Nadawca, iD):
         Palety = []
         self.dataPrzyjecia = dataPrzyjecia
         self.nadawca = nadawca
-        self.id = id
+        self.id = iD
 
     # wyliczanie priorytetu rozpakowania transportu ?
     # def okrescPriorytet(self):
