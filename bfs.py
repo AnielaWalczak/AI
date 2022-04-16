@@ -19,7 +19,7 @@ class Stan:
 
 
 class Nastepnik:
-    def __init__(self, akcja: Akcja, stan: Stan, poprzednik):
+    def __init__(self, akcja: Akcja or None, stan: Stan, poprzednik):
         self.akcja = akcja
         self.stan = stan
         self._poprzednik = poprzednik

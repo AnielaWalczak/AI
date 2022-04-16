@@ -3,42 +3,47 @@ from collections import deque
 
 from bfs import Stan, Akcja, graphsearch
 from krata import *
+from obserwacja import *
 
 
-class Agent:
-    cel: Stan
+class Agent(Obserwowany):
     bok = BOK_AGENTA1
     bokWPolach = BOK_AGENTA1_W_POLACH
+    cel: Stan or None
+    kierunek: Kierunek
+    # droga: int
+    hitbox: pygame.Rect
+    poleKoncoweDolne: PoleKraty
 
-    def __init__(self, Krata, poleStartoweGorne: PoleKraty, tekstura):
-        self.krata = Krata
+    def __init__(self, krata: Krata, poleStartoweGorne: PoleKraty, tekstura):
+        self.krata = krata
         self.poleStartoweGorne = poleStartoweGorne
         self.tekstura = tekstura
         self.okreslPolozenie()
         self.obierzLosowyKierunek()
-        self.okreslDlugoscDrogi()
-        Krata.agent = self
+        # self.okreslDlugoscDrogi()
+        krata.agent = self
         self.cel = None
 
-    def ruszSie(self):
-        if self.droga <= 0:
-            self.obierzLosowyKierunek()
-            self.okreslDlugoscDrogi()
-        self.zrobKrokWMoimKierunku()
-        self.droga -= 1
-        self.okreslPolozenie()
-        if self.wyszedlemPozaKrate() or self.wszedlemWSciane():
-            self.cofnijSie()
-            self.zawroc()
-            self.okreslDlugoscDrogi()
+    # def ruszSie(self):
+    #     if self.droga <= 0:
+    #         self.obierzLosowyKierunek()
+    #         self.okreslDlugoscDrogi()
+    #     self.zrobKrokWMoimKierunku()
+    #     self.droga -= 1
+    #     self.okreslPolozenie()
+    #     if self.wyszedlemPozaKrate() or self.wszedlemWSciane():
+    #         self.cofnijSie()
+    #         self.zawroc()
+    #         self.okreslDlugoscDrogi()
 
     def obierzLosowyKierunek(self):
         self.kierunek = Kierunek(random.randint(0, 3))
-        if self.maxDlugoscDrogiWMoimKierunku() < 1:
-            self.obierzLosowyKierunek()
+        # if self.maxDlugoscDrogiWMoimKierunku() < 1:
+        #     self.obierzLosowyKierunek()
 
-    def okreslDlugoscDrogi(self):
-        self.droga = random.randint(1, self.maxDlugoscDrogiWMoimKierunku())
+    # def okreslDlugoscDrogi(self):
+    #     self.droga = random.randint(1, self.maxDlugoscDrogiWMoimKierunku())
 
     def cofnijSie(self):
         self.zrobKrokWOdwrotnymKierunku()
@@ -47,6 +52,7 @@ class Agent:
     def okreslPolozenie(self):
         self.okreslPoleKoncoweDolne()
         self.okreslHitbox()
+        self.powiadomObserwatorow()
 
     def okreslHitbox(self):
         self.hitbox = pygame.Rect(self.poleStartoweGorne.start, self.poleStartoweGorne.gora, self.bok, self.bok)
@@ -68,7 +74,6 @@ class Agent:
         else:
             return False
 
-    # ZROBIC sciany
     def wszedlemWSciane(self):
         for wiersz in range(self.poleStartoweGorne.wiersz, self.poleKoncoweDolne.wiersz + 1):
             for kolumna in range(self.poleStartoweGorne.kolumna, self.poleKoncoweDolne.kolumna + 1):
@@ -128,41 +133,34 @@ class Agent:
     def idzNaWschod(self):
         self.poleStartoweGorne.kolumna += 1
 
-    # def bfs(self,graph, start, cel):
-    #     sciezka = [start]
-    #     wierzcholek_sciezka = [start, sciezka]
-    #     bfs_kolejka = [wierzcholek_sciezka]
-    #     odwiedzone = set()
-    #     while bfs_kolejka:
-    #         aktualne, sciezka = bfs_kolejka.pop(0)
-    #         odwiedzone.add(aktualne)
-    #         for neighbor in graph[aktualne]:
-    #             if neighbor not in odwiedzone:
-    #                 if neighbor is cel:
-    #                     return sciezka + [neighbor]
-    #                 else:
-    #                     bfs_kolejka.append([neighbor, sciezka + [neighbor]])
-
-    def idzDoCelu(self, klatkaz):
+    def idzDoCelu(self):
         stan_poczatkowy = Stan(self.kierunek, self.poleStartoweGorne)
         stos_akcji = graphsearch(stan_poczatkowy, self.cel)
-        if stos_akcji == False:
+        if not stos_akcji:
             print("Nie można dotrzeć.")
         else:
-            self.wykonaj_stos_akcji(stos_akcji, klatkaz)
+            self.wykonaj_stos_akcji(stos_akcji)
             print("Dotarłem.")
+        self.usunCel()
 
-        self.krata.krata[self.cel.poleStartoweGorne.wiersz][
-            self.cel.poleStartoweGorne.kolumna] = ZawartoscPola.PUSTE  ##chwilowo-przeniesc pozniej
+    def ustawCel(self, cel):
+        self.cel = cel
+        wiersz = self.cel.poleStartoweGorne.wiersz
+        kolumna = self.cel.poleStartoweGorne.kolumna
+        if self.krata.krata[wiersz][kolumna] == ZawartoscPola.PUSTE:
+            self.krata.krata[wiersz][kolumna] = ZawartoscPola.CEL
 
+    def usunCel(self):
+        wiersz = self.cel.poleStartoweGorne.wiersz
+        kolumna = self.cel.poleStartoweGorne.kolumna
+        if self.krata.krata[wiersz][kolumna] == ZawartoscPola.CEL:
+            self.krata.krata[wiersz][kolumna] = ZawartoscPola.PUSTE
         self.cel = None
 
-    def wykonaj_stos_akcji(self, stos_akcji: deque, klatkaz):
+    def wykonaj_stos_akcji(self, stos_akcji: deque):
         while stos_akcji:
-            klatkaz.tick(FPS)
-            self.narysujAgenta()
             akcja = stos_akcji.pop()
-            print(akcja.name, end=" ")
+            # print(akcja.name, end=" ")
             if akcja == Akcja.KROK_W_PRZOD:
                 self.zrobKrokWMoimKierunku()
                 self.okreslPolozenie()
@@ -170,7 +168,7 @@ class Agent:
                 self.obrocSieWLewo()
             elif akcja == Akcja.OBROT_W_PRAWO:
                 self.obrocSieWPrawo()
-        print()
+        # print()
 
     def obrocSieWLewo(self):
         self.kierunek = self.kierunek.kierunekNaLewo()
@@ -179,6 +177,8 @@ class Agent:
         self.kierunek = self.kierunek.kierunekNaPrawo()
 
     def narysujAgenta(self):
-        self.krata.narysujKrate()
         self.krata.okno.blit(self.tekstura, (self.hitbox.x, self.hitbox.y))
-        pygame.display.update()
+
+    def powiadomObserwatorow(self):
+        for obserwator in self.obserwatorzy:
+            obserwator.odbierzPowiadomienie(self)

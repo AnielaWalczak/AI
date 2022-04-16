@@ -9,6 +9,8 @@ class Wymiary:
 
 
 class Mapa:
+    mapa: []
+
     def __init__(self):
         self.liczbaPolPoziomo = LICZBA_POL_W_POZIOMIE
         self.liczbaPolPionowo = LICZBA_POL_W_PIONIE
@@ -18,13 +20,13 @@ class Mapa:
         self.agent = None
 
     def utworzPustaMape(self):
-        self.krata = []
+        self.mapa = []
         for wiersz in range(self.liczbaPolPionowo):
-            self.krata.append([])
+            self.mapa.append([])
             for kolumna in range(self.liczbaPolPoziomo):
                 zawartosc_pola = ZawartoscPola.PUSTE
                 nowe_pole = PoleMapy(self, wiersz, kolumna, zawartosc_pola)
-                self.krata[wiersz].append(nowe_pole)
+                self.mapa[wiersz].append(nowe_pole)
 
 
 class PoleMapy:
@@ -61,7 +63,7 @@ class Miejsce:  # wcześniej półka
 
 class Szafka:
     def __init__(self, numerSzafki, wymiary: Wymiary, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna,
-                 poczatek_wiersz1, Krata: Krata):
+                 poczatek_wiersz1, krata: Krata):
         self.numerSzafki = numerSzafki
         self.wymiary = wymiary
         self.iloscPolek = iloscPolek
@@ -70,7 +72,7 @@ class Szafka:
         self.Miejsca = []
         self.zajmowanePola = []
         self.utworzPustaSzafke(numerSzafki, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_kolumna,
-                               poczatek_wiersz1, Krata)
+                               poczatek_wiersz1, krata)
 
     def dodajMiejsce(self, miejsce: Miejsce):
         self.Miejsca.append(miejsce)
@@ -79,7 +81,7 @@ class Szafka:
         self.zajmowanePola.append(pole)
 
     def utworzPustaSzafke(self, numerSzafki, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, poczatek_wiersz1,
-                          poczatek_kolumna, Krata: Krata):
+                          poczatek_kolumna, krata: Krata):
         for i in range(iloscPolek):
             for j in range(iloscMiejscNaPolce):
                 wymiar_miejsca = Wymiary(0, 0, 0)
@@ -89,16 +91,16 @@ class Szafka:
                 for m in range(DUZA_SZAFA):  # wiersz
                     poczatek_wiersz = poczatek_wiersz1 + j * DUZA_SZAFA + m
                     for n in range(DUZA_SZAFA):  # kolumna
-                        Krata.krata[poczatek_wiersz][poczatek_kolumna + n] = ZawartoscPola.SCIANA
-                        pole = PoleKraty(Krata, poczatek_wiersz, poczatek_kolumna + n)
+                        krata.krata[poczatek_wiersz][poczatek_kolumna + n] = ZawartoscPola.SCIANA
+                        pole = PoleKraty(krata, poczatek_wiersz, poczatek_kolumna + n)
                         miejsce.dodajPole(pole)
                         self.dodajPole(pole)
                         if dostepZeStrony == "L":
-                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz,
+                            pole_dostepu = PoleKraty(krata, poczatek_wiersz,
                                                      poczatek_kolumna + n - BOK_AGENTA1_W_POLACH)  # dostęp z lewej strony
                             miejsce.dodajDostep(pole_dostepu)
                         elif dostepZeStrony == "P":
-                            pole_dostepu = PoleKraty(Krata, poczatek_wiersz,
+                            pole_dostepu = PoleKraty(krata, poczatek_wiersz,
                                                      poczatek_kolumna + n + BOK_AGENTA1_W_POLACH)  # dostęp z prawej strony strony
                             miejsce.dodajDostep(pole_dostepu)
                 self.dodajMiejsce(miejsce)
