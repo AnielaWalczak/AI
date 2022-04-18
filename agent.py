@@ -1,9 +1,11 @@
 import random
 from collections import deque
 
-from bfs import Stan, Akcja, graphsearch
+# from bfs import graphsearch
+from a_gwiazdka import graphsearch
 from krata import *
 from obserwacja import *
+from stan_nastepnik import Stan, Akcja
 
 
 class Agent(Obserwowany):

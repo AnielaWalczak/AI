@@ -55,24 +55,39 @@ def nadaj_cel_agentowi(agent: Agent):
 
 def main():
     # dla kraty 30 x 15
-    # dodaj_szafke("A", 2, 12, "P", 2, 2)
-    # dodaj_szafke("B", 2, 12, "L", 2, 3)
-    # dodaj_szafke("C", 2, 5, "P", 1, 6)
-    # dodaj_szafke("D", 2, 6, "L", 1, 7)
-    # dodaj_szafke("C", 2, 4, "P", 9, 6)
-    # dodaj_szafke("D", 2, 3, "L", 10, 7)
-    # dodaj_szafke("E", 2, 8, "P", 3, 11)
-    # dodaj_szafke("F", 2, 10, "L", 2, 13)
-    # dodaj_szafke("H", 2, 12, "L", 1, 18)
-    # dodaj_szafke("I", 2, 7, "P", 5, 23)
-    # dodaj_szafke("J", 2, 12, "L", 1, 25)
-    # dodaj_szafke("G", 2, 10, "P", 5, 29)
+    dodaj_szafke("A", 2, 12, "P", 2, 2)
+    dodaj_szafke("B", 2, 12, "L", 2, 3)
+    dodaj_szafke("C", 2, 5, "P", 1, 6)
+    dodaj_szafke("D", 2, 6, "L", 1, 7)
+    dodaj_szafke("C", 2, 4, "P", 9, 6)
+    dodaj_szafke("D", 2, 3, "L", 10, 7)
+    dodaj_szafke("E", 2, 8, "P", 3, 11)
+    dodaj_szafke("F", 2, 10, "L", 2, 13)
+    dodaj_szafke("H", 2, 12, "L", 1, 18)
+    dodaj_szafke("I", 2, 7, "P", 5, 23)
+    dodaj_szafke("J", 2, 12, "L", 1, 25)
+    dodaj_szafke("G", 2, 9, "P", 5, 28)
 
-    # dla kraty 10 x 10
-    dodaj_szafke("A", 1, 8, "P", 1, 1)
-    dodaj_szafke("B", 1, 8, "L", 1, 4)
-    dodaj_szafke("C", 1, 8, "P", 1, 6)
-    dodaj_szafke("C", 1, 8, "P", 1, 8)
+    # # dla kraty 10 x 10
+    # dodaj_szafke("A", 1, 8, "P", 1, 1)
+    # dodaj_szafke("B", 1, 8, "L", 1, 4)
+    # dodaj_szafke("C", 1, 8, "P", 1, 6)
+    # dodaj_szafke("C", 1, 8, "P", 1, 8)
+
+    # # dla kraty 5 x 5
+    # dodaj_szafke("A", 1, 3, "P", 1, 1)
+    # dodaj_szafke("B", 1, 3, "L", 1, 3)
+
+    for i in (
+            (1, 10), (1, 3), (3, 23), (2, 23), (5, 15), (4, 15), (9, 12), (11, 20), (11, 27), (11, 26), (14, 19),
+            (14, 18),
+            (14, 20), (8, 29), (9, 29)):
+        krata_magazynu.krata[i[0]][i[1]] = ZawartoscPola.DYWAN
+    for i in (
+            (0, 10), (13, 20), (13, 6), (13, 14), (14, 13), (9, 26), (9, 16), (9, 15), (9, 27), (9, 16), (9, 26),
+            (5, 8),
+            (5, 9), (7, 9), (7, 10)):
+        krata_magazynu.krata[i[0]][i[1]] = ZawartoscPola.KALUZA
 
     dodaj_agenta()
 
