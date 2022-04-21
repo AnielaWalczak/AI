@@ -165,11 +165,12 @@ class Agent(Obserwowany):
             # print(akcja.name, end=" ")
             if akcja == Akcja.KROK_W_PRZOD:
                 self.zrobKrokWMoimKierunku()
-                self.okreslPolozenie()
+                # self.okreslPolozenie()
             elif akcja == Akcja.OBROT_W_LEWO:
                 self.obrocSieWLewo()
             elif akcja == Akcja.OBROT_W_PRAWO:
                 self.obrocSieWPrawo()
+            self.okreslPolozenie()
         # print()
 
     def obrocSieWLewo(self):

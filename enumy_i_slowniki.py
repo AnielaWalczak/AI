@@ -59,5 +59,5 @@ ZawartoscPolaNaKosztWjechania = {
     ZawartoscPola.SCIANA: None,
     ZawartoscPola.CEL: 2,
     ZawartoscPola.DYWAN: 5,
-    ZawartoscPola.KALUZA: 9
+    ZawartoscPola.KALUZA: 35
 }
