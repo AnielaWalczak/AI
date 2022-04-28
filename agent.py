@@ -175,9 +175,11 @@ class Agent(Obserwowany):
 
     def obrocSieWLewo(self):
         self.kierunek = self.kierunek.kierunekNaLewo()
+        self.tekstura = pygame.transform.rotate(self.tekstura, 90)
 
     def obrocSieWPrawo(self):
         self.kierunek = self.kierunek.kierunekNaPrawo()
+        self.tekstura = pygame.transform.rotate(self.tekstura, 270)
 
     def narysujAgenta(self):
         self.krata.okno.blit(self.tekstura, (self.hitbox.x, self.hitbox.y))

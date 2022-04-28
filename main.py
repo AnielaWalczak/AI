@@ -1,5 +1,7 @@
 import os
 
+import pygame.transform
+
 from agent import *
 from okno import *
 from ramy_czyli_wiedza_agenta import *
@@ -18,7 +20,7 @@ def dodaj_agenta():
     # random.randint(0, LICZBA_POL_W_POZIOMIE - BOK_AGENTA1_W_POLACH))
     # pole_lewe_gorne = PoleKraty(krata_magazynu, LICZBA_POL_W_PIONIE - BOK_AGENTA1_W_POLACH, int(LICZBA_POL_W_POZIOMIE / 2))
     pole_lewe_gorne = PoleKraty(krata_magazynu, 0, 0)
-    pom = 'traktor_ikona.png'
+    pom = 'test2_ikona.png'
     ikona = pygame.transform.scale(pygame.image.load(os.path.join('Ikony', pom)),
                                    (BOK_AGENTA1, BOK_AGENTA1))
     Agent(krata_magazynu, pole_lewe_gorne, ikona)
