@@ -71,7 +71,12 @@ class Krata(Obserwowany):
                 start = (self.odstepMiedzyPolami + self.bokPola) * kolumna + self.odstepMiedzyPolami
                 gora = (self.odstepMiedzyPolami + self.bokPola) * wiersz + self.odstepMiedzyPolami
                 kolor_pola = ZawartoscPolaNaKolorPola[self.krata[wiersz][kolumna]]
-                pygame.draw.rect(self.okno, kolor_pola, [start, gora, self.bokPola, self.bokPola])
+                if kolor_pola != IKONA:
+                    pygame.draw.rect(self.okno, kolor_pola, [start, gora, self.bokPola, self.bokPola])
+                else:
+                    osoba_ikona = pygame.transform.scale(pygame.image.load(os.path.join('Ikony', 'osoba2.png')),
+                                                         (BOK_AGENTA1, BOK_AGENTA1))
+                    self.okno.blit(osoba_ikona, [start, gora, self.bokPola, self.bokPola])
 
     def narysujKrateAlternatywnie(self):
         self.okno.fill(SZARY1)

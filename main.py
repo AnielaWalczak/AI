@@ -1,10 +1,13 @@
+import ctypes
 import os
+import threading
 
 import pygame.transform
 
 from agent import *
 from okno import *
 from ramy_czyli_wiedza_agenta import *
+from rescue import *
 
 # aby działalo w oknie + rozdzielczość ekranu
 # ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -54,6 +57,16 @@ def nadaj_cel_agentowi(agent: Agent):
     zaznacz_cel_na_mapie(agent.cel)
     print("CEL:", agent.cel.poleStartoweGorne.wiersz, agent.cel.poleStartoweGorne.kolumna)
 
+def zdarzenie_osoba():
+    global flaga1
+    flaga1=1
+
+def losowa_osoba():
+    wiersz = random.randint(0, krata_magazynu.liczbaPolPionowo - 1)
+    kolumna = random.randint(0, krata_magazynu.liczbaPolPoziomo - 1)
+    osoba = PoleKraty(krata_magazynu, wiersz, kolumna)
+    return osoba
+
 
 def main():
     # dla kraty 30 x 15
@@ -91,10 +104,21 @@ def main():
             (5, 9), (7, 9), (7, 10)):
         krata_magazynu.krata[i[0]][i[1]] = ZawartoscPola.KALUZA
 
-    dodaj_agenta()
+    for i in range(LICZBA_POL_W_PIONIE):
+        krata_magazynu.krata[i][21] = ZawartoscPola.SCIANA2
+    krata_magazynu.krata[0][21]=ZawartoscPola.PUSTE
+    krata_magazynu.krata[7][21] = ZawartoscPola.PUSTE
+    krata_magazynu.krata[14][21] = ZawartoscPola.PUSTE
 
+    dodaj_agenta()
     okno1 = Okno(krata_magazynu, krata_magazynu.agent)
     okno1.wyswietlOkno()
+
+    t = threading.Timer(5.0, zdarzenie_osoba).start()
+    osoba = PoleKraty(krata_magazynu, 0, 0)
+    clf=drzewo_decyzyjne()
+    global flaga1
+    flaga1 = 0
 
     while True:
         # cel to Stan (pole kraty gdzie ma stać agent, aby położyć paczkę na półkę, w obiekcie klasy Miejsce jest to artybut dostęp + kierunek <-na razie niepotrzebny)
@@ -102,6 +126,26 @@ def main():
             nadaj_cel_agentowi(krata_magazynu.agent)
             krata_magazynu.agent.idzDoCelu()
 
+        if flaga1 == 1:
+            osoba.krata.krata[osoba.wiersz][osoba.kolumna] = ZawartoscPola.PUSTE
+            okno1.wyswietlOkno()
+            osoba = losowa_osoba()
+            while osoba.krata.krata[osoba.wiersz][osoba.kolumna] != ZawartoscPola.PUSTE:
+                osoba = losowa_osoba()
+            osoba.krata.krata[osoba.wiersz][osoba.kolumna] = ZawartoscPola.OSOBA
+            okno1.wyswietlOkno()
+            pygame.time.wait(1000)
+            answer = decyzja_osoba(osoba, clf)
+            if answer == 1:
+                osoba.krata.krata[osoba.wiersz][osoba.kolumna] = ZawartoscPola.PUSTE
+                okno1.wyswietlOkno()
+                bieg = pygame.transform.scale(pygame.image.load(os.path.join('Ikony', 'bieg.png')),
+                                              (BOK_AGENTA1, BOK_AGENTA1))
+                okno_pygame.blit(bieg, (osoba.kolumna * (BOK_POLA + 1) + 1, osoba.wiersz * (BOK_POLA + 1) + 1))
+                pygame.display.flip()
+                pygame.time.wait(1500)
+            flaga1 = 0
+            t = threading.Timer(5.0, zdarzenie_osoba).start()
 
 try:
     main()

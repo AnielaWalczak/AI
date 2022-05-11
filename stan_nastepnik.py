@@ -70,7 +70,7 @@ def pole_w_granicach_kraty(pole: PoleKraty):
 
 
 def mozna_wjechac_na_pole(pole: PoleKraty):
-    if pole.krata.krata[pole.wiersz][pole.kolumna] != ZawartoscPola.SCIANA:
+    if pole.krata.krata[pole.wiersz][pole.kolumna] != ZawartoscPola.SCIANA and pole.krata.krata[pole.wiersz][pole.kolumna] != ZawartoscPola.SCIANA2 and pole.krata.krata[pole.wiersz][pole.kolumna] != ZawartoscPola.OSOBA:
         return True
     else:
         return False

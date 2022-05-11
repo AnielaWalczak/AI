@@ -1,3 +1,6 @@
+import os
+import pygame
+
 FPS = 20
 #
 # SZEROKOSC_OKNA = 1500
@@ -23,6 +26,8 @@ CZARNY = (0, 0, 0)
 CIEMNY_BRAZOWY1 = (60, 19, 33)
 ZOLTY1 = (231, 213, 69)
 NIEBIESKI1 = (65, 125, 225)
+IKONA=pygame.transform.scale(pygame.image.load(os.path.join('Ikony', 'osoba2.png')),
+                                               (BOK_AGENTA1, BOK_AGENTA1))
 ###
 
 ###

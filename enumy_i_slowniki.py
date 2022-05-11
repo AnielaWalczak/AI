@@ -36,6 +36,8 @@ class ZawartoscPola(Enum):
     CEL = 2
     DYWAN = 3
     KALUZA = 4
+    SCIANA2=5
+    OSOBA=6
 
 
 ZawartoscPolaNaKolorPola = {
@@ -43,7 +45,9 @@ ZawartoscPolaNaKolorPola = {
     ZawartoscPola.SCIANA: CIEMNY_BRAZOWY1,
     ZawartoscPola.CEL: ZIELONY1,
     ZawartoscPola.DYWAN: ZOLTY1,
-    ZawartoscPola.KALUZA: NIEBIESKI1
+    ZawartoscPola.KALUZA: NIEBIESKI1,
+    ZawartoscPola.SCIANA2: SZARY1,
+    ZawartoscPola.OSOBA: IKONA
 }
 
 ZawartoscPolaNaKosztObrotu = {
@@ -51,7 +55,9 @@ ZawartoscPolaNaKosztObrotu = {
     ZawartoscPola.SCIANA: None,
     ZawartoscPola.CEL: 1,
     ZawartoscPola.DYWAN: 5,
-    ZawartoscPola.KALUZA: 3
+    ZawartoscPola.KALUZA: 3,
+    ZawartoscPola.SCIANA2: None,
+    ZawartoscPola.OSOBA: None
 }
 
 ZawartoscPolaNaKosztWjechania = {
@@ -59,5 +65,7 @@ ZawartoscPolaNaKosztWjechania = {
     ZawartoscPola.SCIANA: None,
     ZawartoscPola.CEL: 2,
     ZawartoscPola.DYWAN: 5,
-    ZawartoscPola.KALUZA: 35
+    ZawartoscPola.KALUZA: 35,
+    ZawartoscPola.SCIANA2: None,
+    ZawartoscPola.OSOBA: None
 }
