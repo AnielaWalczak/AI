@@ -28,6 +28,10 @@ ZOLTY1 = (231, 213, 69)
 NIEBIESKI1 = (65, 125, 225)
 IKONA=pygame.transform.scale(pygame.image.load(os.path.join('Ikony', 'osoba2.png')),
                                                (BOK_AGENTA1, BOK_AGENTA1))
+KALUZA=pygame.transform.scale(pygame.image.load(os.path.join('Ikony', 'kaluza.png')),
+                                               (BOK_AGENTA1, BOK_AGENTA1))
+DYWAN=pygame.transform.scale(pygame.image.load(os.path.join('Ikony', 'dywan.png')),
+                                               (BOK_AGENTA1, BOK_AGENTA1))
 ###
 
 ###
