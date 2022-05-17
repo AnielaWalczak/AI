@@ -44,8 +44,8 @@ ZawartoscPolaNaKolorPola = {
     ZawartoscPola.PUSTE: BIALY,
     ZawartoscPola.SCIANA: CIEMNY_BRAZOWY1,
     ZawartoscPola.CEL: ZIELONY1,
-    ZawartoscPola.DYWAN: ZOLTY1,
-    ZawartoscPola.KALUZA: NIEBIESKI1,
+    ZawartoscPola.DYWAN: DYWAN,
+    ZawartoscPola.KALUZA: KALUZA,
     ZawartoscPola.SCIANA2: SZARY1,
     ZawartoscPola.OSOBA: IKONA
 }
