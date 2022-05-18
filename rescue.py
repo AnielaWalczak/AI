@@ -32,8 +32,8 @@ def decyzja_osoba(osoba: PoleKraty, clf: DecisionTreeClassifier):
         z.append(0)  # zimne pomieszczenie
     else:
         z.append(1)  # normalne pomieszczenie
-    z.extend(random.choices([1, 2], weights=[7, 3], k=1)) # poziom kurzu, 2 to największy/najbardziej niebezpieczny
-    z.extend(random.choices([1, 2], weights=[4, 6], k=1)) # poziom oświetlenia, 2 to najlepsze oświetlenie
+    z.append(random.randint(20, 100)) # poziom kurzu
+    z.append(random.randint(20, 100)) # poziom oświetlenia
     if (0<=osoba.wiersz or osoba.wiersz<=13) and (17<=osoba.kolumna or osoba.kolumna<=19): #obok szafki z niebezpiecznymi towarami
         z.append(1)
     else:
