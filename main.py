@@ -8,7 +8,7 @@ from agent import *
 from okno import *
 from ramy_czyli_wiedza_agenta import *
 from rescue import *
-
+from neural_network import *
 # aby działalo w oknie + rozdzielczość ekranu
 # ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
@@ -146,6 +146,7 @@ def main():
                 pygame.time.wait(1500)
             flaga1 = 0
             t = threading.Timer(5.0, zdarzenie_osoba).start()
+    recognition()
 
 try:
     main()

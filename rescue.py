@@ -17,9 +17,9 @@ def drzewo_decyzyjne():
     clf = clf.fit(x, y)
     # print("Dokładność: ", metrics.accuracy_score(y_test, y_pred))
 
-    dot_data = tree.export_graphviz(clf, out_file=None, feature_names=kolumny_x, class_names=['0', '1'])
-    graph = pydotplus.graph_from_dot_data(dot_data)
-    graph.write_png('drzewo.png')
+  #  dot_data = tree.export_graphviz(clf, out_file=None, feature_names=kolumny_x, class_names=['0', '1'])
+   # graph = pydotplus.graph_from_dot_data(dot_data)
+    #graph.write_png('drzewo.png')
 
     return clf
 
