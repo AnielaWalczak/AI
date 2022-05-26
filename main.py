@@ -146,7 +146,7 @@ def main():
                 pygame.time.wait(1500)
             flaga1 = 0
             t = threading.Timer(5.0, zdarzenie_osoba).start()
-    recognition()
+        recognition()
 
 try:
     main()
