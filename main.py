@@ -125,6 +125,7 @@ def main():
         if krata_magazynu.agent.cel is None:
             nadaj_cel_agentowi(krata_magazynu.agent)
             krata_magazynu.agent.idzDoCelu()
+            recognition()
 
         if flaga1 == 1:
             osoba.krata.krata[osoba.wiersz][osoba.kolumna] = ZawartoscPola.PUSTE
@@ -146,7 +147,7 @@ def main():
                 pygame.time.wait(1500)
             flaga1 = 0
             t = threading.Timer(5.0, zdarzenie_osoba).start()
-        recognition()
+
 
 try:
     main()
