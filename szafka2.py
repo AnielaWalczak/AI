@@ -1,3 +1,5 @@
+import random
+
 import miejsce
 
 
@@ -33,3 +35,7 @@ class Szafka:
             self.listaWolnychMiejsc[0].numerUmieszczonejPaczki = numerPaczki
             self.listaWolnychMiejsc[0].status = "zajęte"
             self.listaWolnychMiejsc.pop(0)
+
+
+
+

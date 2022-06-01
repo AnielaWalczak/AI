@@ -4,11 +4,13 @@ import threading
 
 import pygame.transform
 
+import szafka2
 from agent import *
 from okno import *
 from ramy_czyli_wiedza_agenta import *
 from rescue import *
 from neural_network import *
+import random
 # aby działalo w oknie + rozdzielczość ekranu
 # ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
@@ -37,11 +39,85 @@ def dodaj_szafke(numerSzafki, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, po
                     poczatek_kolumna, krata_magazynu)
     Pomieszczenie.dodajSzafke(szafka)
 
+def gdzie_paczka(numerSzafki):
+    if numerSzafki == 1:
+        kolumna =random.randint(1,2)
+        if kolumna ==1:
+            wiersz = random.randint(2,13)
+        else:
+            wiersz = random.choice([1,14])
+    if numerSzafki == 2:
+        kolumna = random.randint(3,4)
+        if kolumna == 3:
+                wiersz = random.choice([1, 14])
+        else:
+            wiersz = random.randint(2, 13)
+    if numerSzafki == 3:
+        kolumna = random.randint(5,8)
+        if kolumna == 5:
+            wiersz = random.randint(1,5)
+        if kolumna == 6:
+            wiersz = random.choice([0,6])
+        if kolumna == 7:
+            wiersz = random.choice([0,7])
+        if kolumna == 8:
+            wiersz= random.randint(1,6)
+    if numerSzafki == 4:
+        kolumna = random.randint(5,8)
+        if kolumna == 5:
+            wiersz = random.randint(9,12)
+        if kolumna==6:
+            wiersz = random.choice([8,13])
+        if kolumna ==7:
+            wiersz = random.choice([9,13])
+        if kolumna==8:
+            wiersz = random.randint(10,12)
+    if numerSzafki == 5:
+        kolumna = random.randint(10,12)
+        if kolumna == 11:
+            wiersz = random.choice([2,11])
+        else:
+            wiersz = random.randint(3,10)
+    if numerSzafki == 6:
+        kolumna  = random.randint(12,14)
+        if kolumna == 13:
+            wiersz = random.choice([1,12])
+        else:
+            wiersz = random.randint(2,11)
+    if numerSzafki == 7:
+        kolumna = random.randint(17,19)
+        if kolumna == 18:
+            wiersz = random.choice([0,13])
+        else:
+            wiersz =random.randint(1,12)
+    if numerSzafki == 8:
+        kolumna = random.randint(22,24)
+        if kolumna == 23:
+            wiersz =random.choice([4,12])
+        else:
+            wiersz =random.randint(5,11)
+    if numerSzafki == 9:
+        kolumna = random.randint(24,26)
+        if kolumna == 25:
+            wiersz =random.choice([0,13])
+        else:
+            wiersz =random.randint(1,12)
+    if numerSzafki == 10:
+        kolumna =random.randint(27,29)
+        if kolumna == 28:
+            wiersz = random.choice([4,14])
+        else:
+            wiersz = random.randint(5, 13)
 
-def losowy_cel():
+    print(wiersz,kolumna)
+    return wiersz, kolumna
+
+
+def ustawienie():
+    ostatnia = recognition()
+    print(ostatnia)
     kierunek = Kierunek(random.randint(0, 3))
-    wiersz = random.randint(0, krata_magazynu.liczbaPolPionowo - 1)
-    kolumna = random.randint(0, krata_magazynu.liczbaPolPoziomo - 1)
+    wiersz, kolumna = gdzie_paczka(ostatnia+1)
     return Stan(kierunek, PoleKraty(krata_magazynu, wiersz, kolumna))
 
 
@@ -53,7 +129,7 @@ def zaznacz_cel_na_mapie(cel: Stan):
 
 
 def nadaj_cel_agentowi(agent: Agent):
-    agent.cel = losowy_cel()
+    agent.cel = ustawienie()
     zaznacz_cel_na_mapie(agent.cel)
     print("CEL:", agent.cel.poleStartoweGorne.wiersz, agent.cel.poleStartoweGorne.kolumna)
 
@@ -125,7 +201,7 @@ def main():
         if krata_magazynu.agent.cel is None:
             nadaj_cel_agentowi(krata_magazynu.agent)
             krata_magazynu.agent.idzDoCelu()
-            recognition()
+        ustawienie()
 
         if flaga1 == 1:
             osoba.krata.krata[osoba.wiersz][osoba.kolumna] = ZawartoscPola.PUSTE

@@ -50,5 +50,5 @@ def recognition():
     print(loss)
     print(accuracy)
     print(numery_paczek)
-    return liczba
-recognition()
+    ostatnia = liczba %10
+    return ostatnia
