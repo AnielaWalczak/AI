@@ -25,30 +25,33 @@ model.save('handwritten.model')
 
 model = tf.keras.models.load_model('handwritten.model')
 numery_paczek=[]
-def recognition():
-    digits=[]
-    try:
-        for i in range(0,3):
-            image_number = random.randint(1, 17)
-            img = cv2.imread(f"digits/digit{image_number}.png")[:,:,0]
-            img = np.invert(np.array([img]))
-            prediction = model.predict(img)
-            print(f"This digit is probably a {np.argmax(prediction)}")
-            digits.append(np.argmax(prediction))
-            plt.imshow(img[0], cmap = plt.cm.binary)
-            plt.show()
-    except:
-        print("Error!")
 
-    liczba = int(str(digits[0]) + str(digits[1])+str(digits[2]))
-    if liczba in numery_paczek or liczba<100:
-        recognition()
+def liczby():
+    digits=[]
+    for i in range(0, 3):
+        image_number = random.randint(1, 19)
+        img = cv2.imread(f"digits/digit{image_number}.png")[:, :, 0]
+        img = np.invert(np.array([img]))
+        prediction = model.predict(img)
+        print(f"This digit is probably a {np.argmax(prediction)}")
+        digits.append(np.argmax(prediction))
+        plt.imshow(img[0], cmap=plt.cm.binary)
+        plt.show()
+    liczba = int(str(digits[0]) + str(digits[1]) + str(digits[2]))
+    if liczba in numery_paczek or liczba < 100:
+        liczby()
     else:
         numery_paczek.append(liczba)
-    print(liczba)
+    return numery_paczek[-1]
+
+def recognition():
+    try:
+        liczba= liczby()
+    except:
+        print("Error!")
+    ostatnia = liczba % 10
     loss, accuracy = model.evaluate(x_test, y_test)
     print(loss)
     print(accuracy)
     print(numery_paczek)
-    ostatnia = liczba %10
     return ostatnia

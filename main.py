@@ -40,6 +40,7 @@ def dodaj_szafke(numerSzafki, iloscPolek, iloscMiejscNaPolce, dostepZeStrony, po
     Pomieszczenie.dodajSzafke(szafka)
 
 def gdzie_paczka(numerSzafki):
+    global kolumna, wiersz
     if numerSzafki == 1:
         kolumna =random.randint(1,2)
         if kolumna ==1:
@@ -108,7 +109,9 @@ def gdzie_paczka(numerSzafki):
             wiersz = random.choice([4,14])
         else:
             wiersz = random.randint(5, 13)
-
+    if numerSzafki == 11:
+        kolumna=0
+        wiersz=0
     print(wiersz,kolumna)
     return wiersz, kolumna
 
@@ -118,6 +121,12 @@ def ustawienie():
     print(ostatnia)
     kierunek = Kierunek(random.randint(0, 3))
     wiersz, kolumna = gdzie_paczka(ostatnia+1)
+    return Stan(kierunek, PoleKraty(krata_magazynu, wiersz, kolumna))
+
+
+def wroc():
+    kierunek = Kierunek(random.randint(0, 3))
+    wiersz, kolumna = gdzie_paczka(11)
     return Stan(kierunek, PoleKraty(krata_magazynu, wiersz, kolumna))
 
 
@@ -132,6 +141,10 @@ def nadaj_cel_agentowi(agent: Agent):
     agent.cel = ustawienie()
     zaznacz_cel_na_mapie(agent.cel)
     print("CEL:", agent.cel.poleStartoweGorne.wiersz, agent.cel.poleStartoweGorne.kolumna)
+
+def cel_wroc(agent:Agent):
+    agent.cel = wroc()
+    zaznacz_cel_na_mapie(agent.cel)
 
 def zdarzenie_osoba():
     global flaga1
@@ -201,7 +214,10 @@ def main():
         if krata_magazynu.agent.cel is None:
             nadaj_cel_agentowi(krata_magazynu.agent)
             krata_magazynu.agent.idzDoCelu()
-        ustawienie()
+            cel_wroc(krata_magazynu.agent)
+            krata_magazynu.agent.idzDoCelu()
+
+
 
         if flaga1 == 1:
             osoba.krata.krata[osoba.wiersz][osoba.kolumna] = ZawartoscPola.PUSTE
