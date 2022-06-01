@@ -29,7 +29,7 @@ def recognition():
     digits=[]
     try:
         for i in range(0,3):
-            image_number = random.randint(1, 19)
+            image_number = random.randint(1, 17)
             img = cv2.imread(f"digits/digit{image_number}.png")[:,:,0]
             img = np.invert(np.array([img]))
             prediction = model.predict(img)
